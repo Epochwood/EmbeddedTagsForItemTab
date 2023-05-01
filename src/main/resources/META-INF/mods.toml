@@ -1,0 +1,28 @@
+modLoader="javafml"
+loaderVersion="[36,)"
+license="MIT"
+
+[[mods]]
+modId="etfit"
+version="1.0Alpha"
+displayName="Embedded Tags For Item Tab"
+logoFile=""
+credits="Heliecp, Aftersans53228"
+authors="Heliecp"
+description='''
+This is a mod for developer to embed tags in the creativetab.
+'''
+
+[[dependencies.roadchina]]
+modId = "forge"
+mandatory = true
+versionRange = "[36,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.roadchina]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.16.5,)"
+ordering = "NONE"
+side = "BOTH"
