@@ -1,44 +1,32 @@
 package io.github.heliecp.etfit;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IReorderingProcessor;
-import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TranslationTextComponent;
-
-import java.util.List;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public abstract class CreativeTabTags extends ItemGroup{
 
-    private ItemGroup tab;
+    public static CreativeTabTags tab;
     private String tabName;
 
     private String[] tagsNames;
-    private ITextComponent[] displayTagsName;
 
-    protected FontRenderer font;
-    private static int selectedTab = ItemGroup.TAB_BUILDING_BLOCKS.getId();
+    private String tagsBackgroundSuffix = "items_tag.png";
+    private net.minecraft.util.ResourceLocation tagsBackgroundLocation;
 
-    public CreativeTabTags(int id, String label, ItemGroup tab, String[] tagsNames) {
+    public CreativeTabTags(int id, String label, String[] tagsNames) {
         super(id, label);
     }
 
-    public CreativeTabTags(String label, ItemGroup tab, String[] tagsNames) {
+    public CreativeTabTags(String label, CreativeTabTags tab, String[] tagsNames) {
         super(label);
-        this.tab = tab;
         this.tabName = label;
+        CreativeTabTags.tab = tab;
         this.tagsNames = tagsNames;
-        this.displayTagsName = displayTagsNames();
-    }
-
-    public ItemGroup getTab()
-    {
-        return tab;
     }
 
     public String getTabName()
@@ -56,24 +44,28 @@ public abstract class CreativeTabTags extends ItemGroup{
         return this.tagsNames;
     }
 
-    public ITextComponent[] displayTagsNames()
+    public ITextComponent[] displayTagsNames() //获取tag资源名称
     {
-        TranslationTextComponent name = null;
-        for (int x = 0; x < tagsNames.length + 1; x++)
+        TranslationTextComponent[] name = new TranslationTextComponent[tagsNames.length - 1];
+        for (int x = 0; x < tagsNames.length; x++)
         {
-            name = new TranslationTextComponent("itemGroup." + tabName + "." + this.tagsNames[x]);
+            name[x] = new TranslationTextComponent("itemGroup." + tabName + "." + this.tagsNames[x]);
         }
-        ITextComponent[] tagName = new ITextComponent[]{name};
-        return tagName;
+        ITextComponent[] tagsNames = name.clone();
+        return tagsNames;
     }
 
-    protected void renderLabels(MatrixStack p_230451_1_, int p_230451_2_, int p_230451_3_) {
-        ItemGroup itemgroup = this.tab;
-        if (itemgroup != null && itemgroup.showTitle()) {
-            RenderSystem.disableBlend();
-            this.font.draw(p_230451_1_, displayTagsNames()[0], 8.0F, 6.0F, itemgroup.getLabelColor());
-        }
+    public CreativeTabTags setTagsBackgroundImage(String modId, String imageName)
+    {
+        this.tagsBackgroundLocation = new ResourceLocation(modId + ":textures/gui/container/creative_inventory/tab_" + imageName);
+        return this;
+    }
 
+    @OnlyIn(Dist.CLIENT)
+    public ResourceLocation getTagsBackgroundImage() {
+        if (tagsBackgroundLocation != null)
+            return tagsBackgroundLocation;
+        return new ResourceLocation( EmbeddedTagsForItemTab.MOD_ID + ":textures/gui/container/creative_inventory/tab_" + tagsBackgroundSuffix);
     }
 
     public abstract ItemStack getIcon();
