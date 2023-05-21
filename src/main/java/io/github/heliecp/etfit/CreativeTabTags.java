@@ -18,7 +18,7 @@ public abstract class CreativeTabTags extends ItemGroup{
     private String tagsBackgroundSuffix = "items_tag.png";
     private net.minecraft.util.ResourceLocation tagsBackgroundLocation;
 
-    public CreativeTabTags(int id, String label, String[] tagsNames) {
+    public CreativeTabTags(int id, String label, CreativeTabTags tab, String[] tagsNames) {
         super(id, label);
     }
 
@@ -47,7 +47,7 @@ public abstract class CreativeTabTags extends ItemGroup{
     public ITextComponent[] displayTagsNames() //获取tag资源名称
     {
         TranslationTextComponent[] name = new TranslationTextComponent[tagsNames.length - 1];
-        for (int x = 0; x < tagsNames.length; x++)
+        for (int x = 0; x < tagsNames.length - 1; x++)
         {
             name[x] = new TranslationTextComponent("itemGroup." + tabName + "." + this.tagsNames[x]);
         }
@@ -65,7 +65,7 @@ public abstract class CreativeTabTags extends ItemGroup{
     public ResourceLocation getTagsBackgroundImage() {
         if (tagsBackgroundLocation != null)
             return tagsBackgroundLocation;
-        return new ResourceLocation( EmbeddedTagsForItemTab.MOD_ID + ":textures/gui/container/creative_inventory/tab_" + tagsBackgroundSuffix);
+        return new ResourceLocation( EmbeddedTagsForItemTab.MOD_ID, "textures/gui/container/creative_inventory/tab_" + tagsBackgroundSuffix);
     }
 
     public abstract ItemStack getIcon();
